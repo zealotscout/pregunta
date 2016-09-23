@@ -7,7 +7,6 @@ use App\Post as Post;
 use App\Http\Requests;
 use Validator;
 
-
 class PostsController extends Controller
 {
     /**
@@ -91,6 +90,7 @@ class PostsController extends Controller
         //
         $post = Post::findOrFail($id);
         $validator = Validator::make($request->all(), Post::rules());
+
         if($validator->fails()) {
             return $validator->errors();
         }

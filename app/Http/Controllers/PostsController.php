@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Post as Post;
 use App\Http\Requests;
+use Validator;
+
 
 class PostsController extends Controller
 {
@@ -39,16 +41,21 @@ class PostsController extends Controller
     public function store(Request $request)
     {
         // dd($request->input('title'));
+        $validator = Validator::make($request->all(), Post::rules());
+
+
+        if($validator->fails()) {
+            return $validator->errors();
+        }
+
         $post = new Post;
         $post->title = $request->input('title');
         $post->body = $request->input('body');
         $post->user_id = $request->input('user_id');
+        $post->save();
+        return response('Resource created correctly', 201)
+            ->header('Content-Type', 'text/plain');
 
-        if ($post->save()) {
-            return $post;
-        } else {
-            return "error";
-        }
     }
 
     /**
@@ -60,14 +67,7 @@ class PostsController extends Controller
     public function show($id)
     {
         //
-        $post = Post::findOrFail($id);
-
-        if ($post = Post::findOrFail($id)->first()) {
-            return $post;
-        } else {
-            return "not found";
-        }
-        
+        return Post::findOrFail($id);;        
     }
 
     /**
@@ -91,13 +91,20 @@ class PostsController extends Controller
     public function update(Request $request, $id)
     {
         //
+
         $post = Post::findOrFail($id);
+        $validator = Validator::make($request->all(), Post::rules());
+        if($validator->fails()) {
+            return $validator->errors();
+        }
+
         $post->title = $request->input('title');
         $post->body = $request->input('body');
         $post->user_id = $request->input('user_id');
 
         if ($post->update()) {
-            return $post;
+            return response('Resource Updated correctly', 201)
+            ->header('Content-Type', 'text/plain');;
         } else {
             return "error";
         }
@@ -112,11 +119,14 @@ class PostsController extends Controller
     public function destroy($id)
     {
         //
-        $post = Post::findOrFail($id);
-        if($post->delete()) {
-            return "deleted";
-        } else {
-            return "not found";
-        }
+        // $post = Post::findOrFail($id);
+        // if($post->delete()) {
+        //     return "deleted";
+        // } else {
+        //     return "not found";
+        // }
+
+        return Post::destroy($id);
+
     }
 }

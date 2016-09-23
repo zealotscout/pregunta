@@ -40,9 +40,7 @@ class PostsController extends Controller
      */
     public function store(Request $request)
     {
-        // dd($request->input('title'));
         $validator = Validator::make($request->all(), Post::rules());
-
 
         if($validator->fails()) {
             return $validator->errors();
@@ -91,7 +89,6 @@ class PostsController extends Controller
     public function update(Request $request, $id)
     {
         //
-
         $post = Post::findOrFail($id);
         $validator = Validator::make($request->all(), Post::rules());
         if($validator->fails()) {
@@ -118,17 +115,8 @@ class PostsController extends Controller
      */
     public function destroy($id)
     {
-        //
-        // $post = Post::findOrFail($id);
-        // if($post->delete()) {
-        //     return "deleted";
-        // } else {
-        //     return "not found";
-        // }
-
         Post::destroy($id);
         return response('Resource Deleted correctly', 200)
             ->header('Content-Type', 'text/plain');
-
     }
 }

@@ -104,7 +104,7 @@ class PostsController extends Controller
 
         if ($post->update()) {
             return response('Resource Updated correctly', 201)
-            ->header('Content-Type', 'text/plain');;
+            ->header('Content-Type', 'text/plain');
         } else {
             return "error";
         }
@@ -126,7 +126,9 @@ class PostsController extends Controller
         //     return "not found";
         // }
 
-        return Post::destroy($id);
+        Post::destroy($id);
+        return response('Resource Deleted correctly', 200)
+            ->header('Content-Type', 'text/plain');
 
     }
 }
